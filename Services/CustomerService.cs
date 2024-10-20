@@ -3,16 +3,17 @@ using System.Threading.Tasks;
 using Proyecto.Models;
 using Newtonsoft.Json;
 using System.Globalization;
-using AutoMapper;
+using Newtonsoft.Json.Serialization;
+
 
 namespace Proyecto.Services
 {
     public class CustomerService
     {
         private readonly HttpClient _httpClient;
-        private readonly IMapper _mapper;
+   
 
-        public CustomerService(HttpClient httpClient, IMapper mapper)
+        public CustomerService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
@@ -27,18 +28,23 @@ namespace Proyecto.Services
             var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
+           
             var settings = new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
                 MissingMemberHandling = MissingMemberHandling.Ignore,
-                Culture = CultureInfo.InvariantCulture
+                Culture = CultureInfo.InvariantCulture,
+                ContractResolver = new DefaultContractResolver
+                {
+                    IgnoreSerializableAttribute = true
+                }
             };
             try
             {
 
                 var customerJson = await response.Content.ReadAsStringAsync();
                 var customer = JsonConvert.DeserializeObject<Customer>(customerJson, settings);
-                 Console.WriteLine($"pasoo : ");
+                Console.WriteLine($"pasoo : ");
                 return customer;
             }
             catch (JsonSerializationException ex)
@@ -46,6 +52,8 @@ namespace Proyecto.Services
                 Console.WriteLine($"Error al deserializar el JSON: {ex.Message}");
                 Console.WriteLine($"Ruta del error: {ex.Path}");
                 Console.WriteLine($"JSON: {response}");
+                var customerJson = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"JSON recibido: {customerJson}");
                 throw;
             }
         }

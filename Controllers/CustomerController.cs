@@ -23,11 +23,12 @@ namespace Proyecto.Controllers
         public async Task<IActionResult> GetCustomerBasicInfo()
         {
             var customer = await _customerService.GetCustomerAsync();
+            var Phone = customer.phoneHome ?? customer.phoneMobile;
             var result = new
             {
                 customer.customerId,
                 customer.email,
-                customer.phone,
+                phone = Phone,
                 customer.birthday,
                 customer.firstName,
                 customer.lastName
@@ -45,7 +46,7 @@ namespace Proyecto.Controllers
 
             addresses = sortBy switch
             {
-                "CreationDate" => ascending ? addresses.OrderBy(a => a.CreationDate).ToList() : addresses.OrderByDescending(a => a.CreationDate).ToList(),
+                "CreationDate" => ascending ? addresses.OrderBy(a => a.creationDate).ToList() : addresses.OrderByDescending(a => a.creationDate).ToList(),
                 _ => ascending ? addresses.OrderBy(a => a.address1).ToList() : addresses.OrderByDescending(a => a.address1).ToList()
             };
 
@@ -57,7 +58,7 @@ namespace Proyecto.Controllers
         public async Task<IActionResult> GetPreferredAddress()
         {
             var customer = await _customerService.GetCustomerAsync();
-            var preferredAddress = customer.addresses.FirstOrDefault(a => a.Preferred);
+            var preferredAddress = customer.addresses.FirstOrDefault(a => a.preferred);
 
             if (preferredAddress == null)
                 return NotFound("No preferred address found");
