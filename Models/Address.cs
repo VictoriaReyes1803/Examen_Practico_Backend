@@ -7,13 +7,13 @@ namespace Proyecto.Models
         public string address1 { get; set; }
 
         [JsonProperty("creationDate")]
-        public DateTime? creationDate { get; set; }
+        public string creationDate { get; set; }
 
         [JsonProperty("address2")]
         public string address2 { get; set; }
 
         [JsonProperty("city")]
-        public string City { get; set; }
+        public string city { get; set; }
 
         [JsonProperty("countryCode")]
         public string CountryCode { get; set; }

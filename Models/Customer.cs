@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Globalization;
 
 namespace Proyecto.Models
 {
@@ -17,7 +18,7 @@ namespace Proyecto.Models
         public string phoneMobile { get; set; }
 
         [JsonProperty("birthday")]
-        public DateTime? birthday { get; set; }
+        public string birthday { get; set; }
 
         [JsonProperty("firstName")]
         public string firstName { get; set; }
@@ -26,10 +27,17 @@ namespace Proyecto.Models
         public string lastName { get; set; }
 
         [JsonProperty("creationDate")]
-        public DateTime? creationDate { get; set; }
+        public string creationDate { get; set; }
 
         [JsonProperty("addresses")]
-        public List<Address> addresses { get; set; } // Asegúrate de tener la clase Address definida.
+        public List<Address> addresses { get; set; }
+
+        public DateTime GetCreationDateAsDateTime()
+        {
+            
+            return DateTime.ParseExact(creationDate, "yyyyMMddTHH:mm:ssK", CultureInfo.InvariantCulture);
+        }
+
     }
 }
 
