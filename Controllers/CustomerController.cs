@@ -3,7 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Proyecto.Services;
 using Newtonsoft.Json;
-
+using Proyecto.Models;
+using System.Globalization;
 
 namespace Proyecto.Controllers
 {
@@ -18,11 +19,14 @@ namespace Proyecto.Controllers
         {
             _customerService = customerService;
         }
+        
 
-        [HttpGet("basic-info")]
+        [HttpGet("getCustomer")]
         public async Task<IActionResult> GetCustomerBasicInfo()
         {
             var customer = await _customerService.GetCustomerAsync();
+
+            
             var Phone = customer.phoneHome ?? customer.phoneMobile;
             var result = new
             {
@@ -31,13 +35,15 @@ namespace Proyecto.Controllers
                 phone = Phone,
                 customer.birthday,
                 customer.firstName,
-                customer.lastName
+                customer.lastName,
+                addresses = customer.addresses ?? new List<Address>()
             };
 
             return Ok(result);
         }
 
-        // 2. Ordenar direcciones del cliente
+
+        // 2.
         [HttpGet("addresses/sorted")]
         public async Task<IActionResult> GetSortedAddresses([FromQuery] string sortBy = "Address1", [FromQuery] bool ascending = true)
         {
@@ -46,14 +52,19 @@ namespace Proyecto.Controllers
 
             addresses = sortBy switch
             {
-                "CreationDate" => ascending ? addresses.OrderBy(a => a.creationDate).ToList() : addresses.OrderByDescending(a => a.creationDate).ToList(),
-                _ => ascending ? addresses.OrderBy(a => a.address1).ToList() : addresses.OrderByDescending(a => a.address1).ToList()
+                "CreationDate" => ascending
+                    ? addresses.OrderBy(a => DateTime.ParseExact(a.creationDate, "yyyyMMddTHHmmssfffffZ", CultureInfo.InvariantCulture)).ToList()
+                    : addresses.OrderByDescending(a => DateTime.ParseExact(a.creationDate, "yyyyMMddTHHmmssfffffZ", CultureInfo.InvariantCulture)).ToList(),
+                _ => ascending
+                    ? addresses.OrderBy(a => a.address1).ToList()
+                    : addresses.OrderByDescending(a => a.address1).ToList()
             };
 
             return Ok(addresses);
         }
 
-        // 3. Obtener dirección preferida del cliente
+
+        // 3. 
         [HttpGet("addresses/preferred")]
         public async Task<IActionResult> GetPreferredAddress()
         {
@@ -66,8 +77,8 @@ namespace Proyecto.Controllers
             return Ok(preferredAddress);
         }
 
-        // 4. Buscar direcciones por código postal
-        [HttpGet("addresses/by-postalcode")]
+        // 4. 
+        [HttpGet("addresses/postalcode")]
         public async Task<IActionResult> GetAddressesByPostalCode([FromQuery] string postalCode)
         {
             var customer = await _customerService.GetCustomerAsync();

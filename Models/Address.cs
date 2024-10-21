@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Globalization;
 namespace Proyecto.Models
 {
     public class Address
@@ -16,7 +17,7 @@ namespace Proyecto.Models
         public string city { get; set; }
 
         [JsonProperty("countryCode")]
-        public string CountryCode { get; set; }
+        public string countryCode { get; set; }
 
         [JsonProperty("postalCode")]
         public string postalCode { get; set; }

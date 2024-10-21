@@ -27,16 +27,10 @@ namespace Proyecto.Models
         public string lastName { get; set; }
 
         [JsonProperty("creationDate")]
-        public string creationDate { get; set; }
+        public DateTime creationDate { get; set; }
 
         [JsonProperty("addresses")]
         public List<Address> addresses { get; set; }
-
-        public DateTime GetCreationDateAsDateTime()
-        {
-            
-            return DateTime.ParseExact(creationDate, "yyyyMMddTHH:mm:ssK", CultureInfo.InvariantCulture);
-        }
 
     }
 }
