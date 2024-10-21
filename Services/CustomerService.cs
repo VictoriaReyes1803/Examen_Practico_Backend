@@ -101,7 +101,6 @@ namespace Proyecto.Services
             }
 
 
-            // Eliminar emojis y caracteres no deseados
             responseBody = Regex.Replace(responseBody, @"[^\u0000-\u007F]+", ""); 
             responseBody = Regex.Replace(responseBody, @"\s+", " ");
             responseBody = Regex.Replace(responseBody, @"[^\{\}\[\]\"":,0-9a-zA-Z ]", "");
@@ -119,15 +118,15 @@ namespace Proyecto.Services
             try
             {
                 var obj = JObject.Parse(input);
-                return true; // Si no se lanza una excepción, es un JSON válido
+                return true; 
             }
             catch (JsonReaderException)
             {
-                return false; // No es un JSON válido
+                return false; 
             }
             catch (Exception)
             {
-                return false; // Manejo de errores generales
+                return false; 
             }
         }
     }
