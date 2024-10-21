@@ -9,8 +9,7 @@ namespace Proyecto.Models
         public string address1 { get; set; }
 
         [JsonProperty("creationDate")]
-        [JsonConverter(typeof(CustomDateTimeConverter))]
-        public DateTime creationDate { get; set; }
+        public string creationDate { get; set; }
 
         [JsonProperty("address2")]
         public string address2 { get; set; }
