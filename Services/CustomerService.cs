@@ -46,6 +46,7 @@ namespace Proyecto.Services
                 NullValueHandling = NullValueHandling.Ignore,
                 MissingMemberHandling = MissingMemberHandling.Ignore,
                 Culture = CultureInfo.InvariantCulture,
+                Converters = new List<JsonConverter> { new CustomDateTimeConverter() }
 
             };
             responseBody = CleanResponseBody(responseBody);
@@ -58,15 +59,15 @@ namespace Proyecto.Services
                 if (string.IsNullOrWhiteSpace(responseBody) || !IsJson(responseBody))
                 {
                     _logger.LogWarning("La respuesta no es un JSON válido.");
-                    return null; // Manejar el caso según tus necesidades
+                    return null;
                 }
 
-                var customer = JsonConvert.DeserializeObject<Customer>(responseBody);
+                var customer = JsonConvert.DeserializeObject<Customer>(responseBody, settings);
 
                 if (customer == null)
                 {
                     _logger.LogWarning("El objeto Customer fue null después de la deserialización.");
-                    return null; // Manejar el caso según tus necesidades
+                    return null; 
                 }
 
                 _logger.LogInformation($"Customer deserializado: {customer}");
@@ -76,16 +77,15 @@ namespace Proyecto.Services
             catch (JsonSerializationException ex)
             {
                 _logger.LogInformation($"Error al deserializar el JSON: {ex.Message}");
-                Console.WriteLine($"Ruta del error: {ex.Path}");
-                Console.WriteLine($"JSON: {response}");
+                _logger.LogInformation($"Ruta del error: {ex.Path}");
+                _logger.LogInformation($"JSON: {response}");
 
                 throw;
             }
             catch (Exception ex)
             {
-                // Manejo de excepciones generales
-                Console.WriteLine($"Error inesperado: {ex.Message}");
-                throw; // Vuelve a lanzar la excepción
+                _logger.LogInformation($"Error inesperado: {ex.Message}");
+                throw;
             }
 
 

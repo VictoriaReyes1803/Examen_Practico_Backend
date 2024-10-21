@@ -52,12 +52,8 @@ namespace Proyecto.Controllers
 
             addresses = sortBy switch
             {
-                "CreationDate" => ascending
-                    ? addresses.OrderBy(a => DateTime.ParseExact(a.creationDate, "yyyyMMddTHHmmssfffffZ", CultureInfo.InvariantCulture)).ToList()
-                    : addresses.OrderByDescending(a => DateTime.ParseExact(a.creationDate, "yyyyMMddTHHmmssfffffZ", CultureInfo.InvariantCulture)).ToList(),
-                _ => ascending
-                    ? addresses.OrderBy(a => a.address1).ToList()
-                    : addresses.OrderByDescending(a => a.address1).ToList()
+                "CreationDate" => ascending ? addresses.OrderBy(a => a.creationDate).ToList() : addresses.OrderByDescending(a => a.creationDate).ToList(),
+                _ => ascending ? addresses.OrderBy(a => a.address1).ToList() : addresses.OrderByDescending(a => a.address1).ToList()
             };
 
             return Ok(addresses);

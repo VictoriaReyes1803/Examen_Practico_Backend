@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Proyecto.Services;
 using System.Globalization;
 namespace Proyecto.Models
 {
@@ -8,7 +9,8 @@ namespace Proyecto.Models
         public string address1 { get; set; }
 
         [JsonProperty("creationDate")]
-        public string creationDate { get; set; }
+        [JsonConverter(typeof(CustomDateTimeConverter))]
+        public DateTime creationDate { get; set; }
 
         [JsonProperty("address2")]
         public string address2 { get; set; }
